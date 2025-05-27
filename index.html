@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyad's Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for a more VS Code like feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e; /* Dark background for track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a4a4a; /* Greyish thumb */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6a6a6a; /* Lighter thumb on hover */
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117; /* GitHub dark-like background */
+            color: #c9d1d9; /* GitHub dark text color */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Mimic VS Code tab styling */
+        .nav-link {
+            padding: 6px 12px; /* Slightly reduced padding for more tabs */
+            font-size: 0.875rem; /* Slightly smaller font for nav links */
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            color: #8b949e; /* Inactive tab color */
+            white-space: nowrap; /* Prevent nav links from wrapping */
+        }
+        .nav-link.active {
+            color: #c9d1d9; /* Active tab text color */
+            background-color: #161b22; /* Active tab background */
+            border-bottom: 2px solid #f78166; /* Orange accent for active tab border */
+        }
+        .nav-link:hover {
+            color: #c9d1d9;
+            background-color: #11151c;
+        }
+        /* Responsive navigation container */
+        .nav-container {
+            overflow-x: auto; /* Allow horizontal scrolling for tabs on small screens */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .nav-container::-webkit-scrollbar {
+            height: 2px; /* Slimmer scrollbar for nav */
+        }
+        .nav-container::-webkit-scrollbar-thumb {
+            background: #f78166; /* Accent color for scrollbar thumb */
+        }
+
+
+        /* Code snippet styling */
+        .code-line .keyword { color: #569cd6; } /* Blue for const */
+        .code-line .variable { color: #9cdcfe; } /* Light blue for variable names */
+        .code-line .string { color: #ce9178; } /* Orange for strings */
+        .code-line .comment { color: #6a9955; } /* Green for comments */
+        .code-line .operator { color: #d4d4d4; } /* White for = ; */
+        .code-line .number { color: #b5cea8; } /* Light green for numbers */
+
+        /* Subtle background gradient/blur effect for hero */
+        .hero-bg-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1; /* Reduced opacity */
+            background: radial-gradient(circle at 20% 30%, #38bdf830 0%, transparent 60%),
+                        radial-gradient(circle at 80% 70%, #34d39930 0%, transparent 60%);
+            filter: blur(60px); /* Increased blur */
+        }
+
+        /* Sidebar styling for About Me */
+        .sidebar-item {
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-left: 2px solid transparent;
+            font-size: 0.875rem;
+        }
+        .sidebar-item:hover {
+            background-color: #21262d; /* Slightly lighter dark on hover */
+        }
+        .sidebar-item.active {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border-left: 2px solid #f78166; /* Accent color for active item */
+        }
+        .sidebar-item .icon {
+            margin-right: 8px;
+            font-family: monospace; /* For consistent icon rendering */
+        }
+        .sidebar-submenu {
+            padding-left: 16px; /* Slightly reduced indent */
+        }
+
+        /* Content area styling */
+        .content-pane {
+            background-color: #0d1117; /* Match body or slightly different if needed */
+        }
+        .md\:border-l { /* Apply border only on md and up */
+             border-left: 1px solid #30363d;
+        }
+
+        .content-header {
+            padding: 8px 12px; /* Reduced padding */
+            border-bottom: 1px solid #30363d;
+            background-color: #161b22;
+        }
+        .content-header h2 {
+            font-size: 0.875rem; /* Smaller header text */
+        }
+
+
+        /* Skill tags */
+        .skill-tag {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            padding: 3px 8px; /* Smaller padding */
+            border-radius: 12px; /* Smaller radius */
+            font-size: 0.75rem; /* Smaller font */
+            display: inline-flex;
+            align-items: center;
+            margin: 3px; /* Reduced margin */
+        }
+        .skill-tag svg {
+            margin-right: 5px; /* Reduced margin */
+            width: 12px; /* Smaller icons */
+            height: 12px;
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #30363d;
+            margin-bottom: 1rem;
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .profile-pic {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-[#161b22] border-b border-[#30363d] sticky top-0 z-50">
+        <div class="container mx-auto px-2 sm:px-4 flex justify-between items-center h-14">
+            <div class="text-md sm:text-lg font-semibold text-gray-200 whitespace-nowrap">
+                Riyad-Portfolio
+            </div>
+            <nav class="flex items-center nav-container">
+                <a href="#hello" class="nav-link active" data-tab="hello">_hello</a>
+                <a href="#about" class="nav-link" data-tab="about">_about-me</a>
+                <a href="#projects" class="nav-link" data-tab="projects">_projects</a>
+                <a href="#clients" class="nav-link" data-tab="clients">_clients</a>
+                <a href="#contact" class="nav-link" data-tab="contact">_contact-me</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-6 sm:py-8 relative">
+        <div class="hero-bg-effect"></div>
+
+        <section id="hello" class="tab-content">
+            <div class="max-w-3xl mx-auto text-center md:text-left py-6 sm:py-10">
+                <div class="flex flex-col items-center md:flex-row md:items-start">
+                    <img src="https://scontent.fdac24-4.fna.fbcdn.net/v/t39.30808-6/450198129_1105484033880968_5491298553626840298_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeGo3qkTousw8FMXT4-7kTE9KAgUyojinqEoCBTKiOKeoXctAL3kZ7hTNibzVRknssQUs4BOG_Bhp001QiozJS1A&_nc_ohc=fjTtoNHTlTYQ7kNvwHRobG7&_nc_oc=AdkZ4iYh6c0riYi9donVehEhkncZGMjdK42ynoHFCr1sw7kmxOlCx9gzcGVSFnkmfjQ&_nc_zt=23&_nc_ht=scontent.fdac24-4.fna&_nc_gid=lnWK35JonKF_QGzNDCgn8w&oh=00_AfLbZmf_dwoYL93KiteAxSk3Gvk2poZU7lAfv2prS7v3kg&oe=683A513F" alt="Riyad - Profile Picture" class="profile-pic md:mr-8">
+                    <div class="mt-4 md:mt-0">
+                        <p class="text-lg sm:text-xl md:text-2xl text-gray-400 mb-1 sm:mb-2">Hi all. I am</p>
+                        <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-100 mb-2 sm:mb-3">Riyad</h1>
+                        <p class="text-xl sm:text-2xl md:text-3xl text-sky-400 mb-6 sm:mb-12">&gt; Full-Stack Developer</p>
+                    </div>
+                </div>
+
+                <div class="font-mono text-xs sm:text-sm md:text-base space-y-1 bg-[#0d1117] p-4 sm:p-6 rounded-lg border border-[#30363d] shadow-xl text-left">
+                    <p class="code-line"><span class="comment">// my number</span></p>
+                    <p class="code-line"><span class="keyword">const</span> <span class="variable">telephoneNum</span> <span class="operator">=</span> <span class="string">"YOUR_PHONE_NUMBER"</span><span class="operator">;</span></p>
+                    <p class="code-line"><span class="comment">// my e-mail</span></p>
+                    <p class="code-line"><span class="keyword">const</span> <span class="variable">email</span> <span class="operator">=</span> <span class="string">"your.email@example.com"</span><span class="operator">;</span></p>
+                    <p class="code-line"><span class="comment">// you can also see it on my Github page</span></p>
+                    <p class="code-line"><span class="keyword">const</span> <span class="variable">githubLink</span> <span class="operator">=</span> <span class="string">"https://github.com/yourusername"</span><span class="operator">;</span></p>
+                    <p class="code-line"><span class="comment">// you can check my Linkedin Page</span></p>
+                    <p class="code-line"><span class="keyword">const</span> <span class="variable">linkedinPage</span> <span class="operator">=</span> <span class="string">"https://www.linkedin.com/in/yourusername/"</span><span class="operator">;</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="tab-content hidden">
+            <div class="flex flex-col md:flex-row h-auto md:h-[calc(100vh-12rem)] border border-[#30363d] rounded-lg overflow-hidden bg-[#161b22]">
+                <aside class="w-full md:w-1/3 lg:w-1/4 border-b md:border-b-0 md:border-r border-[#30363d] p-0 bg-[#0d1117] overflow-y-auto md:max-h-[calc(100vh-12rem)]">
+                    <div class="p-3 border-b border-[#30363d]">
+                        <h3 class="text-xs sm:text-sm font-semibold text-gray-300">EXPLORER</h3>
+                    </div>
+                    <nav class="text-sm text-gray-400 py-2">
+                        <div class="sidebar-group px-1">
+                            <div class="sidebar-item group-header flex items-center justify-between" data-group="personal-info">
+                                <span><span class="icon mr-1 text-yellow-400">&#9662;</span> personal-info</span>
+                            </div>
+                            <div class="sidebar-submenu" id="group-personal-info">
+                                <a href="#" class="sidebar-item block active" data-content="bio">
+                                    <span class="icon text-blue-400">&#128196;</span> bio.md
+                                </a>
+                                <a href="#" class="sidebar-item block" data-content="interests">
+                                    <span class="icon text-blue-400">&#128196;</span> interests.txt
+                                </a>
+                            </div>
+                        </div>
+                        <div class="sidebar-group px-1">
+                            <div class="sidebar-item group-header flex items-center justify-between" data-group="skills-cat">
+                                <span><span class="icon mr-1 text-yellow-400">&#9656;</span> skills</span>
+                            </div>
+                            <div class="sidebar-submenu hidden" id="group-skills-cat">
+                                <a href="#" class="sidebar-item block" data-content="languages-frameworks">
+                                    <span class="icon text-purple-400">&#128187;</span> languages_frameworks.js
+                                </a>
+                                 <a href="#" class="sidebar-item block" data-content="databases">
+                                    <span class="icon text-purple-400">&#128187;</span> databases.sql
+                                </a>
+                                <a href="#" class="sidebar-item block" data-content="tools">
+                                    <span class="icon text-purple-400">&#128187;</span> tools.json
+                                </a>
+                            </div>
+                        </div>
+                        <div class="sidebar-group px-1">
+                            <div class="sidebar-item group-header flex items-center justify-between" data-group="education">
+                                <span><span class="icon mr-1 text-yellow-400">&#9656;</span> education</span>
+                            </div>
+                            <div class="sidebar-submenu hidden" id="group-education">
+                                <a href="#" class="sidebar-item block" data-content="high-school">
+                                    <span class="icon text-blue-400">&#128196;</span> high-school.doc
+                                </a>
+                                <a href="#" class="sidebar-item block" data-content="university">
+                                    <span class="icon text-blue-400">&#128196;</span> university.pdf
+                                </a>
+                            </div>
+                        </div>
+                        <div class="sidebar-group px-1">
+                            <div class="sidebar-item group-header flex items-center justify-between" data-group="contacts-info">
+                                <span><span class="icon mr-1 text-yellow-400">&#9656;</span> contacts</span>
+                            </div>
+                            <div class="sidebar-submenu hidden" id="group-contacts-info">
+                                <a href="#" class="sidebar-item block" data-content="email-contact">
+                                    <span class="icon text-green-400">&#128231;</span> email.md
+                                </a>
+                                <a href="#" class="sidebar-item block" data-content="phone-contact">
+                                    <span class="icon text-green-400">&#128222;</span> phone.txt
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                </aside>
+
+                <div class="w-full md:w-2/3 lg:w-3/4 overflow-y-auto content-pane md:border-l md:max-h-[calc(100vh-12rem)]">
+                    <div id="content-bio" class="about-content-pane p-4 sm:p-6">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">bio.md</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-3">About Me</h3>
+                            <p>Welcome to my portfolio! I am Riyad, a passionate Full-Stack Developer with a knack for creating intuitive and dynamic user experiences and robust backend solutions.</p>
+                            <p>I started my journey into web development in [Year/Month] and have been captivated by the ever-evolving landscape of web technologies. I enjoy turning complex problems into elegant solutions and continuously learning new skills.</p>
+                            <p>[Add more about yourself, your journey, what motivates you, etc.]</p>
+                        </article>
+                    </div>
+                    <div id="content-interests" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">interests.txt</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-100">My Interests</h3>
+                            <ul class="list-disc pl-5">
+                                <li>Exploring new web technologies and frameworks.</li>
+                                <li>Developing scalable and efficient applications.</li>
+                                <li>Problem-solving and algorithmic thinking.</li>
+                                <li>[Your Hobby 1, e.g., Reading tech blogs]</li>
+                            </ul>
+                        </article>
+                    </div>
+                    <div id="content-languages-frameworks" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">languages_frameworks.js</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h4 class="text-md sm:text-lg font-semibold text-gray-200 mt-6 mb-3">// Languages & Frameworks</h4>
+                            <div class="flex flex-wrap">
+                                <span class="skill-tag">HTML</span>
+                                <span class="skill-tag">CSS</span>
+                                <span class="skill-tag">Sass</span>
+                                <span class="skill-tag">Bootstrap 5</span>
+                                <span class="skill-tag">Tailwind CSS</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">jQuery</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">JSON</span>
+                                <span class="skill-tag">AJAX</span>
+                                <span class="skill-tag">Express.js</span>
+                                <span class="skill-tag">PHP</span>
+                                <span class="skill-tag">Laravel</span>
+                            </div>
+                        </article>
+                    </div>
+                     <div id="content-databases" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">databases.sql</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h4 class="text-md sm:text-lg font-semibold text-gray-200 mt-6 mb-3">// Databases</h4>
+                            <div class="flex flex-wrap">
+                                <span class="skill-tag">MySQL</span>
+                                <span class="skill-tag">SQL</span>
+                            </div>
+                        </article>
+                    </div>
+                    <div id="content-tools" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">tools.json</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                             <h4 class="text-md sm:text-lg font-semibold text-gray-200 mt-6 mb-3">// Tools</h4>
+                            <div class="flex flex-wrap">
+                                <span class="skill-tag">VS Code</span>
+                                <span class="skill-tag">Git & GitHub</span>
+                                <span class="skill-tag">Chrome DevTools</span>
+                                <span class="skill-tag">npm/yarn</span>
+                                <span class="skill-tag">Composer</span>
+                                <span class="skill-tag">XAMPP/LAMP</span>
+                                <span class="skill-tag">Postman</span>
+                                </div>
+                        </article>
+                    </div>
+                    <div id="content-high-school" class="about-content-pane p-4 sm:p-6 hidden">
+                         <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">high-school.doc</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-100">High School Education</h3>
+                            <p><strong>[Your High School Name]</strong> - [City, State]</p>
+                            <p><em>[Diploma/Degree Name, e.g., High School Diploma]</em> - Graduated [Year]</p>
+                        </article>
+                    </div>
+                    <div id="content-university" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">university.pdf</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-100">University Education</h3>
+                            <p><strong>[Your University Name]</strong> - [City, State]</p>
+                            <p><em>[Degree Name, e.g., Bachelor of Science in Computer Science]</em> - Graduated [Year] / Expected [Year]</p>
+                        </article>
+                    </div>
+                     <div id="content-email-contact" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">email.md</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-100">Email</h3>
+                            <p>You can reach me at: <a href="mailto:your.email@example.com" class="text-sky-400 hover:underline">your.email@example.com</a></p>
+                        </article>
+                    </div>
+                    <div id="content-phone-contact" class="about-content-pane p-4 sm:p-6 hidden">
+                        <div class="content-header mb-4">
+                            <h2 class="text-lg font-semibold text-gray-200">phone.txt</h2>
+                        </div>
+                        <article class="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300">
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-100">Phone</h3>
+                            <p>You can call or text me at: <a href="tel:YOUR_PHONE_NUMBER" class="text-sky-400 hover:underline">YOUR_PHONE_NUMBER</a></p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="tab-content hidden">
+            <div class="text-center py-10 sm:py-20">
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-100 mb-4">My Projects</h2>
+                <p class="text-lg sm:text-xl text-gray-400 mb-8">Here are some of the projects I've worked on.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-2">
+                    <div class="bg-[#161b22] rounded-lg border border-[#30363d] p-4 sm:p-6 shadow-lg text-left">
+                        <h3 class="text-xl sm:text-2xl font-semibold text-sky-400 mb-2">School Management System</h3>
+                        <p class="text-sm sm:text-base text-gray-300 mb-4">A comprehensive system for managing student information, grades, attendance, and more. Built with [mention key technologies, e.g., Laravel, React, MySQL].</p>
+                        <div class="flex space-x-3 sm:space-x-4">
+                            <a href="#" class="text-xs sm:text-sm text-gray-300 hover:text-sky-400 transition-colors py-1 px-2 border border-gray-500 rounded hover:border-sky-400">GitHub</a>
+                            <a href="#" class="text-xs sm:text-sm text-gray-300 hover:text-sky-400 transition-colors py-1 px-2 border border-gray-500 rounded hover:border-sky-400">Live Demo</a>
+                        </div>
+                    </div>
+                    <div class="bg-[#161b22] rounded-lg border border-[#30363d] p-4 sm:p-6 shadow-lg text-left">
+                        <h3 class="text-xl sm:text-2xl font-semibold text-sky-400 mb-2">Project Title 2</h3>
+                        <p class="text-sm sm:text-base text-gray-300 mb-4">A brief description of the project, its purpose, and technologies used.</p>
+                         <div class="flex space-x-3 sm:space-x-4">
+                            <a href="#" class="text-xs sm:text-sm text-gray-300 hover:text-sky-400 transition-colors py-1 px-2 border border-gray-500 rounded hover:border-sky-400">GitHub</a>
+                            <a href="#" class="text-xs sm:text-sm text-gray-300 hover:text-sky-400 transition-colors py-1 px-2 border border-gray-500 rounded hover:border-sky-400">Live Demo</a>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </section>
+        
+        <section id="clients" class="tab-content hidden">
+            <div class="text-center py-10 sm:py-20">
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-100 mb-4">My Clients</h2>
+                <p class="text-lg sm:text-xl text-gray-400 mb-8">I've had the pleasure of working with some amazing clients.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-2">
+                    <div class="bg-[#161b22] rounded-lg border border-[#30363d] p-6 shadow-lg">
+                        <img src="https://placehold.co/150x80/161b22/30363d?text=Client+Logo+1" alt="Client Logo 1" class="mx-auto h-16 mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'w-full h-16 bg-gray-700 flex items-center justify-center text-gray-400 rounded\'>Logo</div>'">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-2">Client Company Name</h3>
+                        <p class="text-sm text-gray-400 italic">"A glowing testimonial about the great work Riyad did for us. Highly recommended!"</p>
+                    </div>
+                     <div class="bg-[#161b22] rounded-lg border border-[#30363d] p-6 shadow-lg">
+                        <img src="https://placehold.co/150x80/161b22/30363d?text=Client+Logo+2" alt="Client Logo 2" class="mx-auto h-16 mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'w-full h-16 bg-gray-700 flex items-center justify-center text-gray-400 rounded\'>Logo</div>'">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-2">Another Client Inc.</h3>
+                        <p class="text-sm text-gray-400 italic">"Riyad delivered exceptional results on a tight deadline. Professional and skilled."</p>
+                    </div>
+                    </div>
+            </div>
+        </section>
+
+        <section id="contact" class="tab-content hidden">
+            <div class="text-center py-10 sm:py-20 max-w-xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-100 mb-4">Get In Touch</h2>
+                <p class="text-lg sm:text-xl text-gray-400 mb-8">Feel free to reach out for collaborations, opportunities, or just to say hi!</p>
+                <div class="bg-[#161b22] p-6 sm:p-8 rounded-lg border border-[#30363d] shadow-xl">
+                    <p class="text-md sm:text-lg text-gray-300 mb-2">Email: <a href="mailto:your.email@example.com" class="text-sky-400 hover:underline">your.email@example.com</a></p>
+                    <p class="text-md sm:text-lg text-gray-300 mb-2">LinkedIn: <a href="https://www.linkedin.com/in/yourusername/" target="_blank" class="text-sky-400 hover:underline">linkedin.com/in/yourusername</a></p>
+                    <p class="text-md sm:text-lg text-gray-300">GitHub: <a href="https://github.com/yourusername" target="_blank" class="text-sky-400 hover:underline">github.com/yourusername</a></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#0d1117] border-t border-[#30363d] py-3 sm:py-4">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-gray-500">
+            <div class="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-0">
+                <span>find me in:</span>
+                <a href="https://linkedin.com/in/yourusername" target="_blank" class="hover:text-sky-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                <a href="https://github.com/yourusername" target="_blank" class="hover:text-sky-400">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://twitter.com/yourusername" target="_blank" class="hover:text-sky-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-.422.724-.665 1.564-.665 2.458 0 1.493.759 2.812 1.914 3.586-.706-.023-1.367-.216-1.952-.534v.052c0 2.083 1.482 3.822 3.444 4.212-.36.098-.741.15-1.14.15-.277 0-.545-.027-.808-.077.548 1.706 2.138 2.946 4.022 2.98-.971.791-2.198 1.239-3.528 1.239-.229 0-.455-.013-.679-.04 1.258.859 2.755 1.363 4.373 1.363 5.244 0 8.11-4.351 8.11-8.111 0-.123-.003-.245-.008-.367.557-.4.036-.936.036-1.491z"/></svg>
+                </a>
+            </div>
+            <div class="text-center sm:text-right">
+                &copy; <span id="currentYear"></span> Riyad. All rights reserved. | @yourusername
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab switching for main navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            function switchTab(targetTabId) {
+                navLinks.forEach(nl => {
+                    if (nl.dataset.tab === targetTabId) {
+                        nl.classList.add('active');
+                    } else {
+                        nl.classList.remove('active');
+                    }
+                });
+
+                tabContents.forEach(content => {
+                    if (content.id === targetTabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+
+                // For About page, ensure the default content (bio) is shown if about tab is active
+                if (targetTabId === 'about') {
+                    // Check if an about sub-item is already active, if not, activate bio
+                    const activeAboutSubItem = document.querySelector('#about .sidebar-item.active');
+                    if (!activeAboutSubItem) {
+                         const bioItem = document.querySelector('.sidebar-item[data-content="bio"]');
+                         if(bioItem) bioItem.click();
+                    } else {
+                        // If an item is active, ensure its content is visible
+                        const contentId = activeAboutSubItem.dataset.content;
+                        document.querySelectorAll('.about-content-pane').forEach(pane => {
+                            pane.classList.add('hidden');
+                        });
+                        const targetPane = document.getElementById('content-' + contentId);
+                        if(targetPane) targetPane.classList.remove('hidden');
+                    }
+                }
+                 window.location.hash = targetTabId; // Update URL hash
+            }
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetTab = this.dataset.tab;
+                    switchTab(targetTab);
+                });
+            });
+
+            // About Me - Sidebar accordion and content switching
+            const groupHeaders = document.querySelectorAll('.sidebar-group .group-header');
+            const sidebarItems = document.querySelectorAll('.sidebar-submenu .sidebar-item');
+            const aboutContentPanes = document.querySelectorAll('.about-content-pane');
+
+            groupHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const groupName = this.dataset.group;
+                    const submenu = document.getElementById('group-' + groupName);
+                    const icon = this.querySelector('.icon');
+                    submenu.classList.toggle('hidden');
+                    if (submenu.classList.contains('hidden')) {
+                        icon.innerHTML = '&#9656;'; // Right arrow
+                    } else {
+                        icon.innerHTML = '&#9662;'; // Down arrow
+                    }
+                });
+            });
+            
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const contentId = this.dataset.content;
+
+                    sidebarItems.forEach(si => si.classList.remove('active'));
+                    this.classList.add('active');
+
+                    aboutContentPanes.forEach(pane => {
+                        if (pane.id === 'content-' + contentId) {
+                            pane.classList.remove('hidden');
+                        } else {
+                            pane.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            // Set current year in footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // Activate tab based on URL hash or default to 'hello'
+            let initialTab = window.location.hash.substring(1);
+            if (!initialTab || !document.getElementById(initialTab)) {
+                initialTab = 'hello';
+            }
+            switchTab(initialTab);
+
+            // Ensure default "bio" content is shown if "about" is the initial tab
+            if (initialTab === 'about') {
+                const bioItem = document.querySelector('.sidebar-item[data-content="bio"]');
+                if (bioItem && !document.querySelector('#about .sidebar-item.active')) {
+                     bioItem.click();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
